@@ -44,7 +44,9 @@ def change(args):
     else:
         os.chdir(os.getenv("HOME", ""))
 
-def exec(entry, command, args, directory):
+def exec(entry, directory):
+    command = entry[0]
+    args = entry[1:]
     if command in BUILT_IN:
         BUILT_IN[command](*args)
     elif check_dir(command, directory):
@@ -59,16 +61,12 @@ def main():
     while True:
         sys.stdout.write("$ ")
         entry = input().strip()
-        print(entry)
         if entry != "":
             if ">" in entry or "1>" in entry:
                 subprocess.run(entry)
-                return
             else:
                 entry = shlex.split(entry)
-                command = entry[0]
-                args = entry[1:]
-            exec(entry, command, args, directories)
+            exec(entry, directories)
 
 
 if __name__ == "__main__":
