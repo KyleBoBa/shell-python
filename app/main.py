@@ -28,11 +28,14 @@ def exec(entry, command, args, directory):
     elif command == BUILT_IN[3]:
         print(os.getcwd())
     elif command == BUILT_IN[4]:
-        path = args.strip() or os.getenv("HOME", "")
-        try:
-            os.chdir(path)
-        except FileNotFoundError:
-            print(f"cd: {path}: No such file or directory")
+        path = args.strip()
+        if path != "~":
+            try:
+                os.chdir(path)
+            except FileNotFoundError:
+                print(f"cd: {path}: No such file or directory")
+        else:
+            os.chdir(os.getenv("HOME", ""))
     elif check_dir(command, directory):
         os.system(entry)
     else:
