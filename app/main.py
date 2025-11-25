@@ -29,10 +29,10 @@ def exec(entry, command, args, directory):
     elif command == BUILT_IN[3]:
         print(os.getcwd())
     elif command == BUILT_IN[4]:
-        if check_dir(args, directory):
-            os.open(check_dir(args, directory))
+        if path := check_dir(args, directory):
+            os.chdir(path)
         else:
-            print(f"cd {args}: No such file or directory")
+            print(f"cd: {args}: No such file or directory")
     elif check_dir(command, directory):
         os.system(entry)
     else:
