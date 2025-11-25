@@ -47,7 +47,7 @@ def exec(entry, command, args, directory):
     if command in BUILT_IN:
         BUILT_IN[command](*args)
     elif check_dir(command, directory):
-        os.system(entry)
+        os.system(*entry)
     else:
         print(f"{command}: command not found")
 
