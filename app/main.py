@@ -12,10 +12,10 @@ BUILT_IN = {
     "cd": lambda args: change(args),
 }
 
+PATH = os.getenv("PATH")
+directory = PATH.split(os.pathsep)
 
-def check_dir(location, directory):
-    PATH = os.getenv("PATH")
-    directory = PATH.split(os.pathsep)
+def check_dir(location):
     for dir in directory:
         path = os.path.join(dir, location)
         if os.path.isfile(path) and os.access(path, os.X_OK):
@@ -24,8 +24,6 @@ def check_dir(location, directory):
 
 
 def validate_type(args):
-    PATH = os.getenv("PATH")
-    directory = PATH.split(os.pathsep)
     path = check_dir(args, directory)
     if args in BUILT_IN:
         print(f"{args} is a shell builtin")
@@ -54,6 +52,11 @@ def completer(text: str, state: int) -> str | None:
     return matches[state] if state < len(matches) else None
 
 
+def build_vocab():
+    pass
+    return
+
+
 def execute_command(entry, directory):
     command = entry[0]
     args = entry[1:]
@@ -66,12 +69,9 @@ def execute_command(entry, directory):
 
 
 def main():
-    PATH = os.getenv("PATH")
-    directories = PATH.split(os.pathsep)
-
     readline.set_completer(completer)
     readline.parse_and_bind("tab: complete")
-    
+
     while True:
         sys.stdout.write("$ ")
         entry = input().strip()
@@ -79,7 +79,7 @@ def main():
             os.system(entry)
         elif entry != "":
             entry = shlex.split(entry)
-            execute_command(entry, directories)
+            execute_command(entry, directory)
 
 
 if __name__ == "__main__":
