@@ -38,7 +38,7 @@ def exec(command, args, directory):
         else:
             print(f"{args}: not found")
     elif path:
-        subprocess.Popen(path, stdout=subprocess.PIPE)
+        subprocess.run(path)
     else:
         validate_command(command)
 
