@@ -63,6 +63,7 @@ def main():
         if entry != "":
             if ">" in entry or "1>" in entry:
                 subprocess.run(entry)
+                print("hello")
             command = entry[0]
             args = entry[1:]
             exec(entry, command, args, directories)
