@@ -24,7 +24,7 @@ def check_dir(location, directory, bol):
 
 
 def exec(entry, command, args, directory):
-    path = check_dir(command, directory, 0)
+    path = check_dir(command, directory, 1)
     if command == ALLOWED_COMMANDS[0]:
         sys.exit()
     elif command == ALLOWED_COMMANDS[1]:
