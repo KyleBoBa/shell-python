@@ -62,10 +62,10 @@ def main():
         sys.stdout.write("$ ")
         entry = input().strip()
         if entry != "":
+            entry = shlex.split(entry)
             if ">" in entry or "1>" in entry:
-                os.system(entry)
-            else:
-                entry = shlex.split(entry)
+                print(entry)
+                subprocess.run(entry)
             exec(entry, directories)
 
 
