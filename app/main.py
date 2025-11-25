@@ -29,7 +29,6 @@ def validate_type(args, directory):
 def check_dir(location, directory):
     for dir in directory:
         path = os.path.join(dir, location)
-        print(path)
         if os.path.isfile(path) and os.access(path, os.X_OK):
             return path
     return None
