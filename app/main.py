@@ -23,7 +23,7 @@ def check_dir(location, directory, bol):
     return None
 
 
-def exec(command, args, directory):
+def exec(entry, command, args, directory):
     path = check_dir(args, directory, 0)
     if command == ALLOWED_COMMANDS[0]:
         sys.exit()
@@ -37,8 +37,8 @@ def exec(command, args, directory):
             print(f"{args} is {path}")
         else:
             print(f"{args}: not found")
-    elif path:
-        subprocess.run(path)
+    elif path is not None:
+        subprocess.run(entry)
     else:
         validate_command(command)
 
@@ -52,7 +52,7 @@ def main():
         if entry != "":
             command = entry.split()[0]
             args = " ".join(entry.split()[1:])
-            exec(command, args, directories)
+            exec(entry, command, args, directories)
         
 
 if __name__ == "__main__":
