@@ -48,7 +48,7 @@ def main():
     directories = PATH.split(os.pathsep)
     while True:
         sys.stdout.write("$ ")
-        entry = input().split(" ")
+        entry = input().split()
         if entry != "":
             command = entry[0]
             args = " ".join(entry[1:])
