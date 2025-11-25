@@ -29,6 +29,7 @@ def exec(entry, command, args, directory):
     elif command == BUILT_IN[3]:
         print(os.getcwd())
     elif command == BUILT_IN[4]:
+        print(args)
         path = check_dir(args, directory)
         if path:
             os.chdir(path)
