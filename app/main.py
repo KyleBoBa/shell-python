@@ -2,15 +2,7 @@ import sys
 import os
 import subprocess
 
-ALLOWED_COMMANDS = ["exit","echo","type"]
-BUILT_IN_TYPES = ["exit","echo","type"]
-
-
-def validate_command(command):
-    if not (command in ALLOWED_COMMANDS):
-        print(f"{command}: command not found")
-        return False
-    return True
+BUILT_IN = ["exit","echo","type","pwd"]
 
 
 def check_dir(location, directory):
@@ -22,23 +14,24 @@ def check_dir(location, directory):
 
 
 def exec(entry, command, args, directory):
-    path = check_dir(command, directory)
-    if command == ALLOWED_COMMANDS[0]:
+    if command == BUILT_IN[0]:
         sys.exit()
-    elif command == ALLOWED_COMMANDS[1]:
+    elif command == BUILT_IN[1]:
         print(f"{args}")
-    elif command == ALLOWED_COMMANDS[2]:
+    elif command == BUILT_IN[2]:
         path = check_dir(args, directory)
-        if args in BUILT_IN_TYPES:
+        if args in BUILT_IN:
             print(f"{args} is a shell builtin")
         elif path:
             print(f"{args} is {path}")
         else:
             print(f"{args}: not found")
-    elif path:
+    elif command == BUILT_IN[3]:
+        print(os.getcwd())
+    elif check_dir(command, directory):
         os.system(entry)
     else:
-        validate_command(command)
+        print(f"{command}: command not found")
 
 
 def main():
