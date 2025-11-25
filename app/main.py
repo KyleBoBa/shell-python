@@ -63,6 +63,7 @@ def main():
         entry = input().strip()
         if entry != "":
             if ">" in entry or "1>" in entry:
+                print(entry)
                 subprocess.run(entry)
             else:
                 entry = shlex.split(entry)
