@@ -60,6 +60,8 @@ def main():
         sys.stdout.write("$ ")
         entry = input().strip()
         entry = shlex.split(entry)
+        if ">" in entry or "1>" in entry:
+            subprocess.run(entry)
         if entry != "":
             command = entry[0]
             args = entry[1:]
