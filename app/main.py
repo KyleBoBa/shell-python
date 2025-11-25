@@ -2,6 +2,7 @@ import sys
 import os
 import subprocess
 import shlex
+import readline
 
 BUILT_IN = {
     "exit": lambda: sys.exit(),
@@ -44,6 +45,12 @@ def change(args):
     else:
         os.chdir(os.getenv("HOME", ""))
 
+
+def completer(text: str, state: int) -> str | None:
+    matches = [cmd + " " for cmd in BUILT_IN if cmd.startswith(text)]
+    return matches[state] if state < len(matches) else None
+
+
 def exec(entry, directory):
     command = entry[0]
     args = entry[1:]
@@ -58,6 +65,10 @@ def exec(entry, directory):
 def main():
     PATH = os.getenv("PATH")
     directories = PATH.split(os.pathsep)
+
+    readline.set_completer(completer)
+    readline.parse_and_bind("tab: complete")
+
     while True:
         sys.stdout.write("$ ")
         entry = input().strip()
