@@ -1,6 +1,7 @@
 import sys
 
-ALLOWED_COMMANDS = ["exit","echo"]
+ALLOWED_COMMANDS = ["exit","echo","type"]
+BUILT_IN_TYPES = ["exit","echo","type"]
 
 
 def validate_command(command):
@@ -9,6 +10,14 @@ def validate_command(command):
         return False
     return True
 
+
+def validate_type(args):
+    if not (args in BUILT_IN_TYPES):
+        sys.stdout.write(f"{args}: not found\n")
+        return False
+    return True
+
+
 def exec(command, args):
     if not validate_command(command):
         return True
@@ -16,9 +25,14 @@ def exec(command, args):
         return False
     elif command == ALLOWED_COMMANDS[1]:
         print(f"{" ".join(args)}")
+    elif command == ALLOWED_COMMANDS[2]:
+        if not validate_type(args[0]):
+            return True
+        print(f"{args[0]} is a shell builtin")
     else:
         print(command)
     return True
+
 
 def main():
     while True:
