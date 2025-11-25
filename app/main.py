@@ -18,7 +18,7 @@ def check_dir(location, directory):
     directory = PATH.split(os.pathsep)
     for dir in directory:
         path = os.path.join(dir, location)
-        if (os.path.isfile(path) and os.access(path, os.X_OK)):
+        if os.path.isfile(path) and os.access(path, os.X_OK):
             return path
     return None
 
@@ -48,10 +48,13 @@ def change(args):
 
 def completer(text: str, state: int) -> str | None:
     matches = [cmd + " " for cmd in BUILT_IN if cmd.startswith(text)]
+    if not matches:
+        print("\x07")
+        return None
     return matches[state] if state < len(matches) else None
 
 
-def exec(entry, directory):
+def execu(entry, directory):
     command = entry[0]
     args = entry[1:]
     if command in BUILT_IN:
@@ -76,7 +79,7 @@ def main():
             os.system(entry)
         elif entry != "":
             entry = shlex.split(entry)
-            exec(entry, directories)
+            execu(entry, directories)
 
 
 if __name__ == "__main__":
