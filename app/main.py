@@ -62,11 +62,11 @@ def main():
         sys.stdout.write("$ ")
         entry = input().strip()
         if entry != "":
-            if ">" in entry or "1>" in entry:
-                os.system(entry)
-            else:
-                entry = shlex.split(entry)
+            entry = shlex.split(entry)
             exec(entry, directories)
+        elif ">" in entry or "1>" in entry:
+            os.system(entry)
+
 
 
 if __name__ == "__main__":
