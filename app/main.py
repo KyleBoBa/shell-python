@@ -1,6 +1,5 @@
 import sys
 import os
-import subprocess
 
 BUILT_IN = ["exit","echo","type","pwd","cd"]
 
@@ -29,7 +28,7 @@ def exec(entry, command, args, directory):
     elif command == BUILT_IN[3]:
         print(os.getcwd())
     elif command == BUILT_IN[4]:
-        path = args.strip() or os.environ.get("HOME", "")
+        path = args.strip() or os.getenv("HOME", "")
         try:
             os.chdir(path)
         except FileNotFoundError:
@@ -41,7 +40,7 @@ def exec(entry, command, args, directory):
 
 
 def main():
-    PATH = os.environ.get("PATH")
+    PATH = os.getenv("PATH")
     directories = PATH.split(os.pathsep)
     while True:
         sys.stdout.write("$ ")
