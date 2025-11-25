@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 import shlex
 
 BUILT_IN = {
@@ -47,7 +48,7 @@ def exec(entry, command, args, directory):
     if command in BUILT_IN:
         BUILT_IN[command](*args)
     elif check_dir(command, directory):
-        os.system(*entry)
+        subprocess.run(entry)
     else:
         print(f"{command}: command not found")
 
