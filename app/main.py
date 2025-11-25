@@ -54,7 +54,7 @@ def completer(text: str, state: int) -> str | None:
     return matches[state] if state < len(matches) else None
 
 
-def execu(entry, directory):
+def execute_command(entry, directory):
     command = entry[0]
     args = entry[1:]
     if command in BUILT_IN:
@@ -79,7 +79,7 @@ def main():
             os.system(entry)
         elif entry != "":
             entry = shlex.split(entry)
-            execu(entry, directories)
+            execute_command(entry, directories)
 
 
 if __name__ == "__main__":
