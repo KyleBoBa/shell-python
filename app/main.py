@@ -71,7 +71,7 @@ def main():
 
     readline.set_completer(completer)
     readline.parse_and_bind("tab: complete")
-
+    print("he")
     while True:
         sys.stdout.write("$ ")
         entry = input().strip()
