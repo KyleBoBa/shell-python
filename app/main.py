@@ -13,24 +13,22 @@ def validate_command(command):
     return True
 
 
-def check_dir(location, directory, bol):
+def check_dir(location, directory):
     for dir in directory:
         path = os.path.join(dir, location)
-        if os.path.isfile(path):
-            if (bol and os.access(path, os.X_OK)):
-                return path
+        if (os.path.isfile(path) and os.access(path, os.X_OK)):
             return path
     return None
 
 
 def exec(entry, command, args, directory):
-    path = check_dir(command, directory, 1)
+    path = check_dir(command, directory)
     if command == ALLOWED_COMMANDS[0]:
         sys.exit()
     elif command == ALLOWED_COMMANDS[1]:
         print(f"{args}")
     elif command == ALLOWED_COMMANDS[2]:
-        path = check_dir(args, directory, 1)
+        path = check_dir(args, directory)
         if args in BUILT_IN_TYPES:
             print(f"{args} is a shell builtin")
         elif path:
