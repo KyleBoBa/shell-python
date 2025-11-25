@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 
 ALLOWED_COMMANDS = ["exit","echo","type"]
 BUILT_IN_TYPES = ["exit","echo","type"]
@@ -12,20 +13,6 @@ def validate_command(command):
     return True
 
 
-def validate_type(args, directory):
-    #1
-    if args in BUILT_IN_TYPES:
-        print(f"{args} is a shell builtin")
-        return
-    #2
-    path = check_dir(args, directory)
-    if path is not None:
-        print(f"{args} is {path}")
-        return
-    #3
-    print(f"{args}: not found")
-
-
 def check_dir(location, directory):
     for dir in directory:
         path = os.path.join(dir, location)
@@ -35,17 +22,22 @@ def check_dir(location, directory):
 
 
 def exec(command, args, directory):
-    if not validate_command(command):
-        return True
+    path = check_dir(args, directory)
     if command == ALLOWED_COMMANDS[0]:
-        return False
+        sys.exit()
     elif command == ALLOWED_COMMANDS[1]:
         print(f"{args}")
     elif command == ALLOWED_COMMANDS[2]:
-        validate_type(args, directory)
+        if args in BUILT_IN_TYPES:
+            print(f"{args} is a shell builtin")
+        elif path is not None:
+            print(f"{args} is {path}")
+        else:
+            print(f"{args}: not found")
+    elif path:
+        subprocess.Popen(path, stdout=subprocess.PIPE)
     else:
-        print(command)
-    return True
+        validate_command(command)
 
 
 def main():
@@ -54,12 +46,11 @@ def main():
     while True:
         sys.stdout.write("$ ")
         entry = input()
-        command = entry.split()[0]
-        args = " ".join(entry.split()[1:])
-
-        if not exec(command, args, directories):
-            break
-
+        if entry != "":
+            command = entry.split()[0]
+            args = " ".join(entry.split()[1:])
+            exec(command, args, directories)
+        
 
 if __name__ == "__main__":
     main()
