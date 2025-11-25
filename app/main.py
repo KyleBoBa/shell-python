@@ -33,11 +33,11 @@ def exec(entry, command, args, directory):
         path = check_dir(args, directory, 1)
         if args in BUILT_IN_TYPES:
             print(f"{args} is a shell builtin")
-        elif path is not None:
+        elif path:
             print(f"{args} is {path}")
         else:
             print(f"{args}: not found")
-    elif path is not None:
+    elif path:
         subprocess.run(entry)
     else:
         validate_command(command)
@@ -48,10 +48,10 @@ def main():
     directories = PATH.split(os.pathsep)
     while True:
         sys.stdout.write("$ ")
-        entry = input()
+        entry = input().split(" ")
         if entry != "":
-            command = entry.split()[0]
-            args = " ".join(entry.split()[1:])
+            command = entry[0]
+            args = " ".join(entry[1:])
             exec(entry, command, args, directories)
         
 
