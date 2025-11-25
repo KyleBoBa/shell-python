@@ -1,9 +1,10 @@
 import sys
-from allowed_commands import ALLOWED_COMMANDS as AC
+
+ALLOWED_COMMANDS = ["exit","echo"]
 
 
 def validate_command(command):
-    if not (command in AC):
+    if not (command in ALLOWED_COMMANDS):
         sys.stdout.write(f"{command}: command not found\n")
         return False
     return True
@@ -11,9 +12,9 @@ def validate_command(command):
 def exec(command, args):
     if not validate_command(command):
         return True
-    if command == AC[0]:
+    if command == ALLOWED_COMMANDS[0]:
         return False
-    elif command == AC[1]:
+    elif command == ALLOWED_COMMANDS[1]:
         print(f"{" ".join(args)}")
     else:
         print(command)
