@@ -20,7 +20,7 @@ def validate_type(args, directory):
     #2
     path = check_dir(args, directory)
     if path is not None:
-        print(f"{args}" is {path})
+        print(f"{args} is {path}")
         return
     #3
     print(f"{args}: not found")
@@ -28,8 +28,9 @@ def validate_type(args, directory):
 
 def check_dir(location, directory):
     for dir in directory:
-        path = os.path.join(dir,location)
-        if os.path.exists(path) and os.access(path, os.X_OK):
+        path = os.path.join(dir, location)
+        print(path)
+        if os.path.isfile(path) and os.access(path, os.X_OK):
             return path
     return None
 
