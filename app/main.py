@@ -61,13 +61,12 @@ def main():
         entry = input().strip()
         entry = shlex.split(entry)
         if entry != "":
-            if ">" in entry or "1>" in entry:
-                print("hello")
-                subprocess.run(entry)
             command = entry[0]
             args = entry[1:]
+            if ">" in entry or "1>" in entry:
+                subprocess.run(entry)
             exec(entry, command, args, directories)
-        
+
 
 if __name__ == "__main__":
     main()
