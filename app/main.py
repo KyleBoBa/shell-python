@@ -2,7 +2,7 @@ import sys
 import os
 import subprocess
 
-BUILT_IN = ["exit","echo","type","pwd"]
+BUILT_IN = ["exit","echo","type","pwd","cd"]
 
 
 def check_dir(location, directory):
@@ -28,6 +28,11 @@ def exec(entry, command, args, directory):
             print(f"{args}: not found")
     elif command == BUILT_IN[3]:
         print(os.getcwd())
+    elif command == BUILT_IN[4]:
+        if check_dir(args, directory):
+            os.open(check_dir(args, directory))
+        else:
+            print(f"cd {args}: No such file or directory")
     elif check_dir(command, directory):
         os.system(entry)
     else:
