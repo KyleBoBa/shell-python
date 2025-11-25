@@ -30,10 +30,11 @@ def exec(entry, command, args, directory):
         print(os.getcwd())
     elif command == BUILT_IN[4]:
         path = check_dir(args, directory)
+        changed = args.strip() or os.environ.get("HOME", "")
         if path:
-            os.chdir(args)
+            os.chdir(changed)
         else:
-            print(f"cd: {args}: No such file or directory")
+            print(f"cd: {changed}: No such file or directory")
     elif check_dir(command, directory):
         os.system(entry)
     else:
