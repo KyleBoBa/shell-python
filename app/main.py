@@ -30,7 +30,7 @@ def exec(entry, command, args, directory):
         print(os.getcwd())
     elif command == BUILT_IN[4]:
         path = check_dir(args, directory)
-        if path[0] == "/":
+        if path:
             try:
                 os.chdir(path)
             except FileNotFoundError:
