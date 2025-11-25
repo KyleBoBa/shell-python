@@ -1,4 +1,5 @@
 import sys
+import os
 
 ALLOWED_COMMANDS = ["exit","echo","type"]
 BUILT_IN_TYPES = ["exit","echo","type"]
@@ -6,42 +7,57 @@ BUILT_IN_TYPES = ["exit","echo","type"]
 
 def validate_command(command):
     if not (command in ALLOWED_COMMANDS):
-        sys.stdout.write(f"{command}: command not found\n")
+        print(f"{command}: command not found")
         return False
     return True
 
 
-def validate_type(args):
-    if not (args in BUILT_IN_TYPES):
-        sys.stdout.write(f"{args}: not found\n")
-        return False
-    return True
+def validate_type(args, directory):
+    #1
+    if args in BUILT_IN_TYPES:
+        print(f"{args} is a shell builtin")
+        return
+    #2
+    path = check_dir(args, directory)
+    if path is not None:
+        print(f"{args}" is {path})
+        return
+    #3
+    print(f"{args}: not found")
 
 
-def exec(command, args):
+def check_dir(location, directory):
+    for dir in directory:
+        path = os.path.join(dir,location)
+        if os.path.exists(path) and os.access(path, os.X_OK):
+            return path
+    return None
+
+
+def exec(command, args, directory):
     if not validate_command(command):
         return True
     if command == ALLOWED_COMMANDS[0]:
         return False
     elif command == ALLOWED_COMMANDS[1]:
-        print(f"{" ".join(args)}")
+        print(f"{args}")
     elif command == ALLOWED_COMMANDS[2]:
-        if not validate_type(args[0]):
-            return True
-        print(f"{args[0]} is a shell builtin")
+        validate_type(args, directory)
     else:
         print(command)
     return True
 
 
 def main():
+    PATH = os.environ.get("PATH")
+    directories = PATH.split(os.pathsep)
     while True:
         sys.stdout.write("$ ")
         entry = input()
         command = entry.split()[0]
-        args = entry.split()[1:]
+        args = " ".join(entry.split()[1:])
 
-        if not exec(command, args):
+        if not exec(command, args, directories):
             break
 
 
