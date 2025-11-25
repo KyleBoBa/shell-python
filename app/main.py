@@ -64,7 +64,6 @@ def main():
         if entry != "":
             entry = shlex.split(entry)
             if ">" in entry or "1>" in entry:
-                print(entry)
                 subprocess.run(entry)
             exec(entry, directories)
 
