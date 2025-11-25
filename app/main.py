@@ -64,7 +64,7 @@ def main():
             command = entry[0]
             args = entry[1:]
             if ">" in entry or "1>" in entry:
-                subprocess.run(entry)
+                os.system(entry)
             exec(entry, command, args, directories)
 
 
