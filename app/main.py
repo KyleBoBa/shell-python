@@ -1,10 +1,19 @@
 import sys
 import os
+import shlex
 
-BUILT_IN = ["exit","echo","type","pwd","cd"]
+BUILT_IN = {
+    "exit": lambda: sys.exit(),
+    "echo": lambda *args: print(" ".join(args)),
+    "type": lambda args: validate_type(args),
+    "pwd": lambda: print(os.getcwd()),
+    "cd": lambda args: change(args),
+}
 
 
 def check_dir(location, directory):
+    PATH = os.getenv("PATH")
+    directory = PATH.split(os.pathsep)
     for dir in directory:
         path = os.path.join(dir, location)
         if (os.path.isfile(path) and os.access(path, os.X_OK)):
@@ -12,30 +21,31 @@ def check_dir(location, directory):
     return None
 
 
+def validate_type(args):
+    PATH = os.getenv("PATH")
+    directory = PATH.split(os.pathsep)
+    path = check_dir(args, directory)
+    if args in BUILT_IN:
+        print(f"{args} is a shell builtin")
+    elif path:
+        print(f"{args} is {path}")
+    else:
+        print(f"{args}: not found")
+
+
+def change(args):
+    path = args.strip()
+    if path != "~":
+        try:
+            os.chdir(path)
+        except FileNotFoundError:
+            print(f"cd: {path}: No such file or directory")
+    else:
+        os.chdir(os.getenv("HOME", ""))
+
 def exec(entry, command, args, directory):
-    if command == BUILT_IN[0]:
-        sys.exit()
-    elif command == BUILT_IN[1]:
-        print(f"{args}")
-    elif command == BUILT_IN[2]:
-        path = check_dir(args, directory)
-        if args in BUILT_IN:
-            print(f"{args} is a shell builtin")
-        elif path:
-            print(f"{args} is {path}")
-        else:
-            print(f"{args}: not found")
-    elif command == BUILT_IN[3]:
-        print(os.getcwd())
-    elif command == BUILT_IN[4]:
-        path = args.strip()
-        if path != "~":
-            try:
-                os.chdir(path)
-            except FileNotFoundError:
-                print(f"cd: {path}: No such file or directory")
-        else:
-            os.chdir(os.getenv("HOME", ""))
+    if command in BUILT_IN:
+        BUILT_IN[command](*args)
     elif check_dir(command, directory):
         os.system(entry)
     else:
@@ -47,10 +57,11 @@ def main():
     directories = PATH.split(os.pathsep)
     while True:
         sys.stdout.write("$ ")
-        entry = input()
+        entry = input().strip()
+        entry = shlex.split(entry)
         if entry != "":
-            command = entry.split()[0]
-            args = " ".join(entry.split()[1:])
+            command = entry[0]
+            args = entry[1:]
             exec(entry, command, args, directories)
         
 
