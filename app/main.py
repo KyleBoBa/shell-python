@@ -4,27 +4,24 @@ import subprocess
 import shlex
 import readline
 
-BUILT_IN = {
-    "exit": lambda: sys.exit(),
-    "echo": lambda *args: print(" ".join(args)),
-    "type": lambda args: validate_type(args),
-    "pwd": lambda: print(os.getcwd()),
-    "cd": lambda args: change(args),
-}
-
-PATH = os.getenv("PATH")
-directory = PATH.split(os.pathsep)
 
 def check_dir(location):
+    executables = {}
     for dir in directory:
         path = os.path.join(dir, location)
         if os.path.isfile(path) and os.access(path, os.X_OK):
-            return path
-    return None
+            if location == "":
+                executables[dir] = path
+            else:
+                return path
+    if location == "":
+        return executables
+    else:
+        return None
 
 
 def validate_type(args):
-    path = check_dir(args, directory)
+    path = check_dir(args)
     if args in BUILT_IN:
         print(f"{args} is a shell builtin")
     elif path:
@@ -45,24 +42,23 @@ def change(args):
 
 
 def completer(text: str, state: int) -> str | None:
-    matches = [cmd + " " for cmd in BUILT_IN if cmd.startswith(text)]
-    if not matches:
+    builtin_matches = [cmd + " " for cmd in BUILT_IN if cmd.startswith(text)]
+    exe_matches = [cmd + " " for cmd in EXECUTABLES if cmd.startswith(text)]
+    if exe_matches:
+        return exe_matches[state] if state < len(exe_matches) else None
+    elif builtin_matches:
+        return builtin_matches[state] if state < len(builtin_matches) else None
+    else:
         print("\x07")
         return None
-    return matches[state] if state < len(matches) else None
 
 
-def build_vocab():
-    pass
-    return
-
-
-def execute_command(entry, directory):
+def execute_command(entry):
     command = entry[0]
     args = entry[1:]
     if command in BUILT_IN:
         BUILT_IN[command](*args)
-    elif check_dir(command, directory):
+    elif check_dir(command):
         subprocess.run(entry)
     else:
         print(f"{command}: command not found")
@@ -79,7 +75,20 @@ def main():
             os.system(entry)
         elif entry != "":
             entry = shlex.split(entry)
-            execute_command(entry, directory)
+            execute_command(entry)
+
+BUILT_IN = {
+    "exit": lambda: sys.exit(),
+    "echo": lambda *args: print(" ".join(args)),
+    "type": lambda args: validate_type(args),
+    "pwd": lambda: print(os.getcwd()),
+    "cd": lambda args: change(args),
+}
+
+PATH = os.getenv("PATH")
+directory = PATH.split(os.pathsep)
+
+EXECUTABLES = check_dir("")
 
 
 if __name__ == "__main__":
