@@ -3,6 +3,7 @@ import os
 import subprocess
 import shlex
 import readline
+from typing import Optional
 
 
 def check_dir(location):
@@ -41,12 +42,12 @@ def change(args):
         os.chdir(os.getenv("HOME", ""))
 
 
-def completer(text: str, state: int) -> str | None:
+def completer(text: str, state: int) -> Optional[str]:
     builtin_matches = [cmd + " " for cmd in BUILT_IN if cmd.startswith(text)]
-    exe_matches = [cmd + " " for cmd in EXECUTABLES if cmd.startswith(text)]
+    """exe_matches = [cmd + " " for cmd in EXECUTABLES if cmd.startswith(text)]
     if exe_matches:
-        return exe_matches[state] if state < len(exe_matches) else None
-    elif builtin_matches:
+        return exe_matches[state] if state < len(exe_matches) else None"""
+    if builtin_matches:
         return builtin_matches[state] if state < len(builtin_matches) else None
     else:
         print("\x07")
